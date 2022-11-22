@@ -3,28 +3,13 @@ import matplotlib.pyplot as plt
 from wordcloud import WordCloud, STOPWORDS
 import string
 import os
+from preprocess import get_tags_set, get_topic_tags, create_tag_fields
 
 # Set of tags by topic
-topic_tags = { 
-        'prog': ['c', 'c++', 'java', 'python', 'go', 'rust'],
-        'python_pkgs': ['bokeh', 'dask', 'huggingface', 'keras', 'matplotlib', 'mlflow', 'airflow', 'fastai', 'nltk', 'numpy', 
-                        'opencv', 'pandas', 'plotly', 'pycaret', 'pyspark', 'pytorch', 'pyviz', 'scikit-learn', 'scipy', 'seaborn',
-                        'spacy', 'statsmodels', 'tensorflow'],
-        'big_data': ['dask', 'bigdata', 'hadoop', 'spark', 'pyspark'],
-        'ds': ['artificial-intelligence', 'computer-vision', 'data-science', 'deep-learning', 'machine-learning', 'nlp', 'reinforcement-learning', 'visualization'],
-        'ds_fields': ['artificial-intelligence', 'computer-vision', 'nlp', 'reinforcement-learning', 'visualization'],
-        'cloud': ['aws', 'amazon-web-services', 'azure', 'cloud', 'google-cloud-platform', ],
-        'mlops': ['airflow', 'docker', 'fastai', 'kubeflow', 'mlflow', 'mlops', ],
-}
+topic_tags = get_topic_tags()
 
 # Set of tags
-tags_set = set(['python','c', 'c++', 'java','go','rust',
-                'data-science', 'machine-learning', 'deep-learning', 'computer-vision', 'artificial-intelligence', 'nlp','reinforcement-learning',
-              'pandas','numpy', 'dask', 'pyspark', 'hadoop', 'spark', 'scipy', 'statsmodels', 'scikit-learn','pytorch','tensorflow','keras',
-              'spacy','nltk','opencv','huggingface','matplotlib','seaborn', 'fastai',
-              'bokeh', 'pyviz', 'pycaret', 'plotly', 'visualization', 'cloud', 'bigdata',
-              'azure','google-cloud-platform','aws', 'mlops', 'amazon-web-services', 'gcp',
-              'docker','airflow','mlflow', 'kubeflow'])
+tags_set = get_tags_set()
 
 # List of irrelevant words in titles
 irrelevant = ['one', 'two', 'three', 'another', 'statement', 'problem', 'word', 'instead', 'group', 'studio', 'problems', 'connection', 'trouble', 
@@ -32,12 +17,32 @@ irrelevant = ['one', 'two', 'three', 'another', 'statement', 'problem', 'word', 
                'example', 'way', 'thing', 'may', 'nothing', 'number', 'anyone', 'well', 'anything', 'using', 'different', 'without', 'via',
                'specific', 'working', 'need', 'work', 'single', 'doesnt', 'adding', 'want', 'given', 'simple', 'use']
 
+
 def str_preprocess(s):
+  """
+  It takes a string, makes it lowercase, and removes all punctuation
+  
+  Args:
+    s: the string to be processed
+  
+  Returns:
+    A string with all lowercase letters and no punctuation.
+  """
   s = s.lower()
   s = "".join([char for char in s if char not in string.punctuation])
   return s
 
+
 def topic_retrieval(s):
+  """
+  Retrieve the list of topics associated with the tags
+  
+  Args:
+    s: a list of tags
+  
+  Returns:
+    A list of topics that are associated with the tags in the input string.
+  """
   topic_list = []
   for tag in s:
     for topic in topic_tags:
@@ -45,23 +50,52 @@ def topic_retrieval(s):
         topic_list.append(topic)
   return topic_list
 
+
 def df_transforms(df):
+  """
+  It takes a dataframe, transforms the title column, creates new columns for tags and topics
+  
+  Args:
+    df: the dataframe
+  
+  Returns:
+    A dataframe with the following columns:
+  """
   df['title'] = df.title.transform(str_preprocess)
-  df['tags1'] = df['tags'].apply(lambda x: x.split('|'))
-  df['tags2'] = df['tags'].apply(lambda x: [i for i in x.split('|') if i in tags_set])
-  df['tag_topic'] = df['tags2'].apply(topic_retrieval)
+  df = create_tag_fields(df)
+  df['tag_topic'] = df['tags_filtered'].apply(topic_retrieval)
   return df
 
+
 def text_generation(df):
+  """
+  It takes a dataframe as input, and returns a string of all the titles in the dataframe
+  
+  Args:
+    df: the dataframe
+  
+  Returns:
+    A string of the title column
+  """
   return " ".join(s for s in df.title)
 
+
 def generate_cloud(text, stopwords, filename='word_cloud.png'):
+  """
+  It takes in a string of text, a list of stopwords, and a filename, and generates a word cloud image
+  of the text
+  
+  Args:
+    text: The text that you want to generate the word cloud for.
+    stopwords: a list of words that you want to exclude from the word cloud.
+    filename: The name of the file that will be saved to the plots folder. Defaults to word_cloud.png
+  """
   wordcloud = WordCloud(stopwords=stopwords, background_color="white", width=800, height=400).generate(text)
   plt.figure(figsize=(20, 20))
   plt.imshow(wordcloud)
   plt.axis("off")
   plt.title("Most Commonly Found Words in the Title of StackOverflow Posts")
-  plt.savefig(os.path.join('/'.join(path.split('/')[:-1]), filename))
+  plt.savefig(os.path.join('../plots/', filename))
 
 
 if __name__=='__main__':
