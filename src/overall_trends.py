@@ -1,40 +1,42 @@
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 import os
 
-def data_preprocess(path):
+def overall_trends(path):
     """
-    It takes a path to a csv file, reads it, filters the main tags , and then
-    saves the stratified sampled dataframe to a new csv file
+    This function takes in a path to a csv file and returns a line plot of the quarterly aggregated
+    statistics of the questions, answers, and comments
     
     Args:
-      path: The path to the file that you want to preprocess.
+      path: the path to the csv file
     """
-    df = pd.read_csv(path)
     
-    tags_set = set(['python','c', 'c++', 'java','go','rust',
-                'data-science', 'machine-learning', 'deep-learning', 'computer-vision', 'artificial-intelligence', 'nlp','reinforcement-learning',
-              'pandas','numpy', 'dask', 'pyspark', 'hadoop', 'spark', 'scipy', 'statsmodels', 'scikit-learn','pytorch','tensorflow','keras',
-              'spacy','nltk','opencv','huggingface','matplotlib','seaborn', 'fastai',
-              'bokeh', 'pyviz', 'pycaret', 'plotly', 'visualization', 'cloud', 'bigdata',
-              'azure','google-cloud-platform','aws', 'mlops', 'amazon-web-services', 'gcp',
-              'docker','airflow','mlflow', 'kubeflow'])
+    df1 = pd.read_csv(path)
     
-    df['tags1'] = df['tags'].apply(lambda x: x.split('|'))
-    df['tags2'] = df['tags'].apply(lambda x: [i for i in x.split('|') if i in tags_set])
-    
-    # Stratified Sampling
-    df1 = df.groupby('tags2_split', group_keys=False).apply(lambda x: x.sample(frac=0.5))
-    
-    df1['creation_month_yr'] = pd.to_datetime(df1['creation_date']).dt.to_period('M')
-    df1['creation_quarter'] = pd.to_datetime(df1['creation_date']).dt.to_period('Q')
-    
-    df1.to_csv(os.path.join('/'.join(path.split()[:-1]), 'sof_questions_filtered.csv', header=True, index=False))
+    overall_trends = df1.groupby('creation_quarter').agg(
+    questions=pd.NamedAgg(column='id', aggfunc='count'), 
+    answers=pd.NamedAgg(column='answer_count', aggfunc='sum'),
+    comments=pd.NamedAgg(column='comment_count', aggfunc='sum'),
+    score=pd.NamedAgg(column='score', aggfunc='sum'),
+    views=pd.NamedAgg(column='view_count', aggfunc='sum'),
+    ).reset_index()
 
+    plt.figure(figsize=(20, 8))
+    ax = sns.lineplot(x=overall_trends["creation_quarter"].astype(str), y=overall_trends['questions'], label='Questions', linewidth=2)
+    ax = sns.lineplot(x=overall_trends["creation_quarter"].astype(str), y=overall_trends['answers'], label='Answers', linewidth=2)
+    ax = sns.lineplot(x=overall_trends["creation_quarter"].astype(str), y=overall_trends['comments'], label='Comments', linewidth=2)
+    plt.xlabel('Quarter')
+    plt.ylabel('Value')
+    plt.title('Quarterly Aggregated Statistics')
+    ax.tick_params(axis='x', labelrotation=90)
+
+    plt.savefig(os.path.join('/'.join(path.split('/')[:-1]), 'overall_stats_trend.png'))
 
 
 if __name__=='__main__':
     
     # Have the GCP BQ downloaded data in data/ folder
-    path = '../data/sof_questions.csv'
+    path = '../data/sof_questions_filtered.csv'
     
-    data_preprocess(path)
+    overall_trends(path)
