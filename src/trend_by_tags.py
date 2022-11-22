@@ -16,11 +16,11 @@ def get_tag_trends_data(path):
       A dataframe with the number of questions per quarter per tag.
     """
     df = pd.read_csv(path)
-    tags_df = df[['creation_quarter', 'tags2', 'answer_count', 'comment_count', 'view_count', 'score']]
+    tags_df = df[['creation_quarter', 'tags_filtered', 'answer_count', 'comment_count', 'view_count', 'score']]
     tags_df = tags_df.explode('tags_filtered')
     
     tag_trends = tags_df.groupby(['creation_quarter','tags_filtered']).agg(
-        questions=pd.NamedAgg(column='tags2', aggfunc='count'), 
+        questions=pd.NamedAgg(column='tags_filtered', aggfunc='count'), 
     ).reset_index()
     
     tag_trends_wide = tag_trends.pivot(index='creation_quarter', columns='tags_filtered', values='questions')
