@@ -8,7 +8,7 @@ ECE143 (Fall 2022) Course Project by: Murali Dandu, Raghu, Jon Carlo Bibat, Hao 
 
 StackOverFlow is a public platform building the definitive collection of coding questions & answers. It is a community-based space to find and contribute answers to technical concepts and tools.
 
-![Overview](plots/sof.PNG "Overview")
+![Overview](plots/sof.png "Overview")
 
 We want to analyze this platform to understand the trends in different technologies, compare different statistics of the website like questions, answers etc. and deepdive into emerging and declining platforms.
 
