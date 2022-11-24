@@ -37,7 +37,7 @@ def plot_tag_trends(tag_trends):
     """
     
     f=  plt.figure(figsize=(20, 8))
-    ax = tag_trends.plot(kind='bar', stacked=True, ax=f.gca())
+    ax = tag_trends.plot(kind='bar', stacked=True, ax=f.gca(), cmap='rainbow')
     plt.xlabel('Quarter')
     plt.ylabel('Questions')
     plt.title('Questions by different tags')

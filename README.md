@@ -71,10 +71,6 @@ Public API to extract information on questions, answers, users and badges
   * ML Ops
 
 
-## Key Insights
-* XX
-
-
 -----
 
 
