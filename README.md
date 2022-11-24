@@ -20,6 +20,14 @@ Here are some of the research questions we tried to answer:
 * How are the main technology tags correlated with each other?
 * What topics are usually associated with these main tags?
 
+## File Structure
+* `src/`: `.py` files to preprocess and generate plots
+* `notebooks/`: Master EDA notebook for all visualizations
+* `ECE143_Group_4.pdf`: Presentation file
+* `requirements.txt`: Packages required to run the notebook and py files
+* `data/`: BQ SQL query to get the raw data
+* `plots/`: All the presented visualizations
+
 ## Installation
 
 Here are the requirements for running this streamlit application.
