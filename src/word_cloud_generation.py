@@ -28,6 +28,7 @@ def str_preprocess(s):
   Returns:
     A string with all lowercase letters and no punctuation.
   """
+  assert isinstance(s, str)
   s = s.lower()
   s = "".join([char for char in s if char not in string.punctuation])
   return s
@@ -43,6 +44,7 @@ def topic_retrieval(s):
   Returns:
     A list of topics that are associated with the tags in the input string.
   """
+  assert isinstance(s, list)
   topic_list = []
   for tag in s:
     for topic in topic_tags:
@@ -61,6 +63,7 @@ def df_transforms(df):
   Returns:
     A dataframe with the following columns:
   """
+  assert isinstance(df, pd.DataFrame)
   df['title'] = df.title.transform(str_preprocess)
   df = create_tag_fields(df)
   df['tag_topic'] = df['tags_filtered'].apply(topic_retrieval)
@@ -77,6 +80,7 @@ def text_generation(df):
   Returns:
     A string of the title column
   """
+  assert isinstance(df, pd.DataFrame)
   return " ".join(s for s in df.title)
 
 
@@ -90,6 +94,9 @@ def generate_cloud(text, stopwords, filename='word_cloud.png'):
     stopwords: a list of words that you want to exclude from the word cloud.
     filename: The name of the file that will be saved to the plots folder. Defaults to word_cloud.png
   """
+  assert isinstance(text, str)
+  assert isinstance(stopwords, list)
+  assert isinstance(filename, str)
   wordcloud = WordCloud(stopwords=stopwords, background_color="white", width=800, height=400).generate(text)
   plt.figure(figsize=(20, 20))
   plt.imshow(wordcloud)
@@ -124,6 +131,3 @@ if __name__=='__main__':
       sub_df = df[[topic in d for d in list(df['tag_topic'])]]
       sub_text = text_generation(sub_df)
       generate_cloud(sub_text, stopwords_w_tags, topic + '_word_cloud.png')
-
-
-
