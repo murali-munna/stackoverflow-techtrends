@@ -5,6 +5,19 @@ import os
 
 
 def get_tag_stats_data(path):
+    """
+    It takes a path to a CSV file, reads it in as a dataframe,
+    explodes the tags column, groups by the tags, and then aggregates the data by summing the answer
+    count, comment count, view count, and score. 
+    
+    Args:
+      path: the path to the csv file
+    
+    Returns:
+      A dataframe with the following columns:
+    """
+    assert isinstance(path, str)
+    assert os.path.exists(path)
     
     df = pd.read_csv(path)
     tags_df = df[['creation_quarter', 'tags_filtered', 'answer_count', 'comment_count', 'view_count', 'score']]
@@ -33,6 +46,9 @@ def plot_tag_trends(tag_qa):
     Args:
       tag_trends: a dataframe with the following columns:
     """
+    assert isinstance(tag_qa, pd.DataFrame)
+    assert set(['questions_log', 'avg_ans', 'avg_views', 'avg_score', 'tags_filtered']).issubset(tag_qa.columns)
+    
     fig, axes = plt.subplots(1, 4, figsize=[20, 15])
 
     g1 = sns.barplot(x='questions_log', y='tags_filtered', data=tag_qa, ax=axes[0])

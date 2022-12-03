@@ -51,7 +51,12 @@ def create_tag_fields(df):
     Returns:
       A dataframe with two new columns: tags_all and tags_filtered.
     """
+    assert isinstance(df, pd.DataFrame)
+    assert set(['tags']).issubset(df.columns)
+    
     tags_set = get_tags_set()
+    assert isinstance(tags_set, set)
+    
     df['tags_all'] = df['tags'].apply(lambda x: x.split('|'))
     df['tags_filtered'] = df['tags'].apply(lambda x: [i for i in x.split('|') if i in tags_set])
     return df
@@ -68,6 +73,9 @@ def create_date_fields(df):
     Returns:
       A dataframe with the new columns
     """
+    assert isinstance(df, pd.DataFrame)
+    assert set(['creation_date']).issubset(df.columns)
+    
     df['creation_month_yr'] = pd.to_datetime(df['creation_date']).dt.to_period('M')
     df['creation_quarter'] = pd.to_datetime(df['creation_date']).dt.to_period('Q')
     return df
@@ -81,6 +89,9 @@ def data_preprocess(path):
     Args:
       path: The path to the file that you want to preprocess.
     """
+    assert isinstance(path, str)
+    assert os.path.exists(path)
+    
     df = pd.read_csv(path)
     
     tags_set = get_tags_set()

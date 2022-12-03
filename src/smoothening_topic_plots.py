@@ -1,18 +1,28 @@
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import os
 import warnings
 warnings.filterwarnings("ignore")
 
 def process(tag_trends_python, topic:str, xlabel:str, ylabel:str, span = 5):
-    """_summary_
+    """
+    Smoothens the line plot across each category for better visualization and trend study
+    
     Args:
-        tag_trends_python (_type_): _description_
-        title (str): _description_ 
+        tag_trends_python (_type_): DataFrame of questions trend across each category
+        topic (str): _description_ 
         xlabel (str): _description_
         ylabel (str): _description_
         span (int, optional): _description_. Defaults to 5.
     """
+    assert isinstance(tag_trends_python, pd.DataFrame)
+    assert isinstance(topic, str)
+    assert isinstance(xlabel, str)
+    assert isinstance(ylabel, str)
+    assert isinstance(span, int)
+    assert set(['tags2', 'questions', 'creation_quarter']).issubset(tag_trends_python.columns)
+    
     a_tags = list(tag_trends_python["tags2"])
     tagsTwo = []
     questions = []
@@ -46,3 +56,5 @@ def process(tag_trends_python, topic:str, xlabel:str, ylabel:str, span = 5):
     plt.ylabel(ylabel)
     plt.title(topic)
     ax.tick_params(axis='x', labelrotation=90)
+    
+    plt.savefig(os.path.join('../plots/', 'python_pkg_trend.png'))

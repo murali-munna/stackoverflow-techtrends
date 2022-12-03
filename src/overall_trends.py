@@ -16,6 +16,9 @@ def get_overall_trend_data(path):
       A dataframe with the following columns:
     creation_quarter, questions, answers, comments, score, views
     """
+    assert isinstance(path, str)
+    assert os.path.exists(path)
+    
     df = pd.read_csv(path)
     
     overall_trends = df.groupby('creation_quarter').agg(
@@ -36,6 +39,9 @@ def plot_ques_ans_cmts(overall_trends):
     Args:
       overall_trends: a dataframe with the following columns:
     """
+    assert isinstance(overall_trends, pd.DataFrame)
+    assert set(['creation_quarter', 'questions', 'answers', 'comments']).issubset(overall_trends.columns)
+    
     plt.figure(figsize=(20, 8))
     ax = sns.lineplot(x=overall_trends["creation_quarter"].astype(str), y=overall_trends['questions'], label='Questions', linewidth=2)
     ax = sns.lineplot(x=overall_trends["creation_quarter"].astype(str), y=overall_trends['answers'], label='Answers', linewidth=2)
@@ -55,6 +61,8 @@ def plot_views(overall_trends):
     Args:
       overall_trends: This is the dataframe that contains the data for the overall trends.
     """
+    assert isinstance(overall_trends, pd.DataFrame)
+    assert set(['creation_quarter', 'views']).issubset(overall_trends.columns)
 
     plt.figure(figsize=(25, 8))
     ax = sns.lineplot(x=overall_trends["creation_quarter"].astype(str), y=overall_trends['views'], label='Question Views', linewidth=2)

@@ -1,4 +1,7 @@
 
+-- Run the following code in GCP Big Query Console
+-- https://console.cloud.google.com/bigquery
+
 WITH questions AS
 (
 select

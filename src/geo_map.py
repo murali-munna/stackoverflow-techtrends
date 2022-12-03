@@ -15,7 +15,7 @@ from geopandas import GeoDataFrame
 
 def _replace_country_name_for_consistency(df,location_column,replace_map):
     '''
-
+    Normalizes the country names to match with geopandas library
 
     Parameters
     ----------
@@ -43,7 +43,7 @@ def _replace_country_name_for_consistency(df,location_column,replace_map):
 
 def _plot_geographical_map(df,column_to_plot,title_of_plot):
     '''
-    
+    Plots the geographical heatmap based on the metric
 
     Parameters
     ----------
@@ -73,7 +73,7 @@ def _plot_geographical_map(df,column_to_plot,title_of_plot):
 
 def _merge_worldmap_data_with_locationss(locations_df):
     '''
-    
+    Merge the country data with the geopandas country locations
 
     Parameters
     ----------
@@ -96,7 +96,7 @@ def _merge_worldmap_data_with_locationss(locations_df):
 
 def _aggregate_location_data(raw_df,locations):
     '''
-    
+    Aggregate the data at country level
 
     Parameters
     ----------

@@ -29,6 +29,7 @@ def str_preprocess(s):
     A string with all lowercase letters and no punctuation.
   """
   assert isinstance(s, str)
+  
   s = s.lower()
   s = "".join([char for char in s if char not in string.punctuation])
   return s
@@ -45,6 +46,7 @@ def topic_retrieval(s):
     A list of topics that are associated with the tags in the input string.
   """
   assert isinstance(s, list)
+  
   topic_list = []
   for tag in s:
     for topic in topic_tags:
@@ -64,6 +66,7 @@ def df_transforms(df):
     A dataframe with the following columns:
   """
   assert isinstance(df, pd.DataFrame)
+  
   df['title'] = df.title.transform(str_preprocess)
   df = create_tag_fields(df)
   df['tag_topic'] = df['tags_filtered'].apply(topic_retrieval)
@@ -81,6 +84,7 @@ def text_generation(df):
     A string of the title column
   """
   assert isinstance(df, pd.DataFrame)
+  
   return " ".join(s for s in df.title)
 
 
@@ -97,6 +101,7 @@ def generate_cloud(text, stopwords, filename='word_cloud.png'):
   assert isinstance(text, str)
   assert isinstance(stopwords, list)
   assert isinstance(filename, str)
+  
   wordcloud = WordCloud(stopwords=stopwords, background_color="white", width=800, height=400).generate(text)
   plt.figure(figsize=(20, 20))
   plt.imshow(wordcloud)

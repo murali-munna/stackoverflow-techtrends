@@ -15,6 +15,9 @@ def get_tag_trends_data(path):
     Returns:
       A dataframe with the number of questions per quarter per tag.
     """
+    assert isinstance(path, str)
+    assert os.path.exists(path)
+    
     df = pd.read_csv(path)
     tags_df = df[['creation_quarter', 'tags_filtered', 'answer_count', 'comment_count', 'view_count', 'score']]
     tags_df = tags_df.explode('tags_filtered')
@@ -35,6 +38,8 @@ def plot_tag_trends(tag_trends):
     Args:
       tag_trends: a dataframe with the following columns:
     """
+    assert isinstance(tag_trends, pd.DataFrame)
+    assert set(['creation_quarter', 'questions', 'tags_filtered']).issubset(tag_trends.columns)
     
     f=  plt.figure(figsize=(20, 8))
     ax = tag_trends.plot(kind='bar', stacked=True, ax=f.gca(), cmap='rainbow')

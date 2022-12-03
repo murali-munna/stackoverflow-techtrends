@@ -26,9 +26,20 @@ main_tags = ['python','c', 'c++', 'java','go','rust',
 # 
 
 def tag_dict(m_tags, df_tags):
-    '''
-    creates dictionary for all of the main tags excluding each other based on frequency
-    '''
+    """
+    Creates dictionary for all of the main tags excluding each other based on frequency
+    
+    Args:
+      m_tags: The tags that you want to find the related tags for.
+      df_tags: This is a list of lists of tags. Each list of tags is a list of tags for a particular
+    question.
+    
+    Returns:
+      A dictionary of dictionaries.
+    """
+    assert isinstance(m_tags, list)
+    assert isinstance(df_tags, list)
+    
     tag_relation_dict = dict()
     for prim_tag in m_tags:
         tag_relation_dict[prim_tag] = dict()
@@ -43,6 +54,7 @@ def tag_dict(m_tags, df_tags):
                     else:
                         continue
     return tag_relation_dict
+
 # primary_tags = pd.Series()
 
 # plot_df = pd.DataFrame(columns = list(all_possible_tags))
@@ -73,8 +85,10 @@ def tag_dict(m_tags, df_tags):
 
 
 if __name__=='__main__':
-    df = pd.read_csv('sof_questions.csv')
+    
+    df = pd.read_csv('../data/sof_questions.csv')
     all_possible_tags = set()
+    
     df['tags2'] = df['tags'].apply(lambda x: [i for i in x.split('|')])
     tag_relation_dict = tag_dict(main_tags,df['tags'])
 

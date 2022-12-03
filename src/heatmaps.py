@@ -15,7 +15,8 @@ import matplotlib.pyplot as plt
 
 def _get_co_occurence_matrix(df,tags_all_column,tags_set):
     '''
-    
+    Get co-occurence matrix based on if two words are present in the same sentence.
+    It utilizes the sklearn Count Vectorizer to implement this.
 
     Parameters
     ----------
@@ -51,7 +52,7 @@ def _get_co_occurence_matrix(df,tags_all_column,tags_set):
 
 def _remove_elements_from_set(tags_set,unwanted_elements):
     '''
-    
+    Only take the top tags that we are interested in
 
     Parameters
     ----------
@@ -80,6 +81,7 @@ def _remove_elements_from_set(tags_set,unwanted_elements):
 
 def _filter_required_columns(df,filter_cols):
     '''
+    Filter the columns of the dataframe
     
     Parameters
     ----------
@@ -104,7 +106,7 @@ def _filter_required_columns(df,filter_cols):
    
 def _get_heatmaps(df):
     '''
-    
+    Plot the heatmap of the co-occurence matrix
 
     Parameters
     ----------
